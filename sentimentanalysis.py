@@ -1,3 +1,4 @@
+import streamlit as st
 import nltk
 import random
 from nltk.corpus import twitter_samples
@@ -36,12 +37,21 @@ test_set = positive_features[positive_split:] + negative_features[negative_split
 # Train a Naive Bayes classifier
 classifier = NaiveBayesClassifier.train(train_set)
 
-# Evaluate the classifier on the test set
-accuracy_score = accuracy(classifier, test_set)
-print(f'Accuracy: {accuracy_score:.2%}')
+# Streamlit App
+st.title("Sentiment Analysis App")
+st.write("Enter a tweet and click the 'Analyze' button to determine its sentiment.")
 
-# Classify new tweets
-new_tweet = "I love this product! It's amazing!"
-features = extract_features(new_tweet)
-sentiment = classifier.classify(features)
-print(f'Sentiment: {sentiment}')
+# User Input
+user_input = st.text_area("Enter a tweet:")
+
+# Sentiment Analysis
+if st.button("Analyze"):
+    features = extract_features(user_input)
+    sentiment = classifier.classify(features)
+
+    if sentiment == 'positive':
+        sentiment_label = "Positive"
+    else:
+        sentiment_label = "Negative"
+
+    st.write(f"Sentiment: {sentiment_label}")
